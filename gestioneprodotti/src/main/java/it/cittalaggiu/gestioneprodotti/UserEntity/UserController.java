@@ -20,11 +20,6 @@ public class UserController {
     private UserService user;
 
 
-    @GetMapping
-    public List<UserEntity> getAllUsersWithSpecificRoles() {
-        return user.findAllWithSpecificRoles();
-    }
-
     @GetMapping("/{id}")
     public ResponseEntity<UserEntity> getById(@PathVariable Long id) {
 
@@ -32,8 +27,9 @@ public class UserController {
     }
 
     @GetMapping("/search")
-    public List<UserEntity> searchUsersByUsername(@RequestParam(name = "q") String query) {
-        return user.searchUsersByUsername(query);
+    public ResponseEntity<List<UserEntity>> searchUsers(@RequestParam("q") String query) {
+        List<UserEntity> users = user.searchUsersByUsername(query);
+        return ResponseEntity.ok(users);
     }
 
     @PostMapping("/register")

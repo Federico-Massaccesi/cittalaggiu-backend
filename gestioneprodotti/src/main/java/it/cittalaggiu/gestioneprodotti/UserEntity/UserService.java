@@ -85,9 +85,7 @@ public class UserService {
         return userRepository.findAll();
     }
 
-    public List<UserEntity> findAllWithSpecificRoles() {
-        return userRepository.findUsersWithCompanyOrPrivateRoles();
-    }
+
 
     public UserEntity findById(Long id){
         var founded = userRepository.findById(id);
@@ -111,15 +109,9 @@ public class UserService {
         }
         userRepository.deleteById(id);    }
 
-    public List<UserEntity> getUsersWithCompanyOrPrivateRoles() {
-        return userRepository.findUsersWithCompanyOrPrivateRoles();
-    }
 
-    public List<UserEntity> getNewsletterUsers() {
-        return userRepository.findUsersForNewsletter();
-    }
 
-    public List<UserEntity> searchUsersByUsername(String query) {
-        return userRepository.searchUsers(query);
+    public List<UserEntity> searchUsersByUsername(String prefix) {
+        return userRepository.findByUsernameStartingWithIgnoreCase(prefix);
     }
 }
