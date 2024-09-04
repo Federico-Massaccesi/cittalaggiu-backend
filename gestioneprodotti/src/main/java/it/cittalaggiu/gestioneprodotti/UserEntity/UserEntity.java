@@ -23,4 +23,7 @@ public class UserEntity extends BaseEntity {
     @ManyToMany(fetch = FetchType.EAGER)
     private final List<Roles> roles = new ArrayList<>();
 
+    @Builder.Default
+    private Integer debt = 0;
+
 }

@@ -14,19 +14,11 @@ public record RegisterUserModel(
         @NotBlank(message = "Lo username  non può contenere solo spazi vuoti")
         @Size(max = 50, message ="Il tuo username è troppo lungo max 50 caratteri")
         String username,
-        @Email
-        String email,
         @NotBlank(message = "La password non può contenere solo spazi vuoti")
         @Size(max = 125, message ="La password è troppo lunga max 20 caratteri")
         String password,
-        String address,
-        String town,
-        String companyName,
-        String piva,
-        List<Roles> roles,
-        Boolean newsletter,
-        Long cap,
-        Long telephoneNumber
+        List<Roles> roles
+
 
 ) {
 }

@@ -12,14 +12,13 @@ import java.util.List;
 public class RegisteredUserDTO {
     Long id;
     String username;
-    String email;
     private List<Roles> roles;
 
+
     @Builder(setterPrefix = "with")
-    public RegisteredUserDTO(Long id, String username, String email, List<Roles> roles) {
+    public RegisteredUserDTO(Long id, String username, List<Roles> roles) {
         this.id = id;
         this.username = username;
-        this.email = email;
         this.roles = roles;
     }
 }

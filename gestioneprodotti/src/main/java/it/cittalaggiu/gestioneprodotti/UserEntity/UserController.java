@@ -41,15 +41,8 @@ try {
     var registeredUser = user.register(
             RegisterUserDTO.builder()
                     .withUsername(model.username())
-                    .withEmail(model.email())
                     .withPassword(model.password())
-                    .withAddress(model.address())
-                    .withTown(model.town())
-                    .withCap(model.cap())
-                    .withCompanyName(model.companyName())
-                    .withPiva(model.piva())
                     .withRoles(model.roles())
-                    .withNewsletter(model.newsletter())
                     .build());
 
     return  new ResponseEntity<> (registeredUser, HttpStatus.OK);
@@ -79,5 +72,17 @@ try {
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
         return ResponseEntity.ok(user.updateUser(id, updatedUser));
+    }
+
+    @PatchMapping("/{id}/debt/add")
+    public ResponseEntity<UserEntity> addToDebt(@PathVariable Long id, @RequestParam Integer amount) {
+        UserEntity updatedUser = user.addToDebt(id, amount);
+        return ResponseEntity.ok(updatedUser);
+    }
+
+    @PatchMapping("/{id}/debt/reset")
+    public ResponseEntity<UserEntity> resetDebt(@PathVariable Long id) {
+        UserEntity updatedUser = user.resetDebt(id);
+        return ResponseEntity.ok(updatedUser);
     }
 }

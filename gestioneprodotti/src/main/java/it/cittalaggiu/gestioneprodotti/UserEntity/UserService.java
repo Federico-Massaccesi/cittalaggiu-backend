@@ -114,4 +114,18 @@ public class UserService {
     public List<UserEntity> searchUsersByUsername(String prefix) {
         return userRepository.findByUsernameStartingWithIgnoreCase(prefix);
     }
+
+    public UserEntity addToDebt(Long id, Integer amount) {
+        UserEntity existingUser = userRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Utente non trovato con id: " + id));
+        existingUser.setDebt(existingUser.getDebt() + amount);
+        return userRepository.save(existingUser);
+    }
+
+    public UserEntity resetDebt(Long id) {
+        UserEntity existingUser = userRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Utente non trovato con id: " + id));
+        existingUser.setDebt(0);
+        return userRepository.save(existingUser);
+    }
 }
