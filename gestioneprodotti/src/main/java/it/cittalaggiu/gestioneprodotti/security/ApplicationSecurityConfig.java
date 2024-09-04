@@ -54,9 +54,7 @@ public class ApplicationSecurityConfig {
                 .cors(Customizer.withDefaults()) // Utilizza la configurazione CORS
                 .authorizeHttpRequests(authorize ->
                         authorize
-                                .requestMatchers(HttpMethod.POST,"/users/login").permitAll()
-                              .requestMatchers(HttpMethod.POST, "/users/register").permitAll()
-                                .requestMatchers(HttpMethod.POST, "roles").permitAll()
+                                .requestMatchers(HttpMethod.POST,"/**").permitAll()
                                 .requestMatchers(HttpMethod.GET,"/**").permitAll()
                                 .requestMatchers(HttpMethod.PATCH,"/**").permitAll()
 
