@@ -27,8 +27,8 @@ public class AssociationController {
     }
 
     @PostMapping
-    public Association createAssociation(@RequestBody Association association) {
-        return associationService.createAssociation(association);
+    public Association createAssociation(@RequestBody Association association,Long id) {
+        return associationService.createAssociation(association,id);
     }
 
     @DeleteMapping("/{id}")

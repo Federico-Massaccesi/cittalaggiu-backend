@@ -1,6 +1,7 @@
 package it.cittalaggiu.gestioneprodotti.UserEntity;
 
 import it.cittalaggiu.gestioneprodotti.BaseEntity;
+import it.cittalaggiu.gestioneprodotti.association.Association;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -23,4 +24,7 @@ public class UserEntity extends BaseEntity {
     @ManyToMany(fetch = FetchType.EAGER)
     private final List<Roles> roles = new ArrayList<>();
 
+    @OneToOne
+    @JoinColumn(name = "association_id")
+    private Association association;
 }

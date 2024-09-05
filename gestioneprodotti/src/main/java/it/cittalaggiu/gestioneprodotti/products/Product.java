@@ -1,11 +1,15 @@
 package it.cittalaggiu.gestioneprodotti.products;
 
 import it.cittalaggiu.gestioneprodotti.BaseEntity;
+import it.cittalaggiu.gestioneprodotti.association.Association;
+import it.cittalaggiu.gestioneprodotti.expense.Expense;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.util.List;
 
-    @EqualsAndHashCode(callSuper = true)
+
+@EqualsAndHashCode(callSuper = true)
     @Data
     @Entity
     @AllArgsConstructor
@@ -23,4 +27,11 @@ import lombok.*;
         private Boolean available;
 
         private Integer quantity = 0;
+
+        @ManyToOne
+        @JoinColumn(name = "association_id")
+        private Association association;
+
+        @ManyToMany(mappedBy = "products")
+        private List<Expense> expenses;
 }

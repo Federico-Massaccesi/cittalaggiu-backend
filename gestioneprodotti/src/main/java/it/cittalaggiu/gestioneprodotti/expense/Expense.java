@@ -3,9 +3,7 @@ package it.cittalaggiu.gestioneprodotti.expense;
 import it.cittalaggiu.gestioneprodotti.BaseEntity;
 import it.cittalaggiu.gestioneprodotti.association.Association;
 import it.cittalaggiu.gestioneprodotti.products.Product;
-import jakarta.persistence.Entity;
-import jakarta.persistence.ManyToOne;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 import lombok.*;
 
 import java.util.List;
@@ -19,14 +17,23 @@ import java.util.List;
 @NoArgsConstructor
 public class Expense extends BaseEntity {
 
+    @ManyToMany
+    @JoinTable(
+            name = "expense_products",
+            joinColumns = @JoinColumn(name = "expense_id"),
+            inverseJoinColumns = @JoinColumn(name = "product_id")
+    )
     private List<Product> products;
-    private double totalPrice = calculateTotalPrice();
 
     @ManyToOne
+    @JoinColumn(name = "association_id")
     private Association association;
 
-    private double calculateTotalPrice() {
-        assert products != null;
+
+    public double getTotalPrice() {
+        if (products == null) {
+            return 0;
+        }
         return products.stream().mapToDouble(Product::getPrice).sum();
     }
 }

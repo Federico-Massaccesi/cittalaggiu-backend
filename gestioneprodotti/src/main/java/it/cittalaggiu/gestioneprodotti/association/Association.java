@@ -4,9 +4,8 @@ import it.cittalaggiu.gestioneprodotti.BaseEntity;
 import it.cittalaggiu.gestioneprodotti.UserEntity.UserEntity;
 import it.cittalaggiu.gestioneprodotti.expense.Expense;
 import it.cittalaggiu.gestioneprodotti.guest.Guest;
-import jakarta.persistence.Entity;
-import jakarta.persistence.OneToMany;
-import jakarta.persistence.Table;
+import it.cittalaggiu.gestioneprodotti.products.Product;
+import jakarta.persistence.*;
 import lombok.*;
 
 import java.util.List;
@@ -22,15 +21,23 @@ public class Association extends BaseEntity {
 
     private String name;
 
-    @OneToMany
+    @OneToMany(mappedBy = "association", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Guest> guests;
 
     private double totalExpenses;
 
+    @ElementCollection
+    @CollectionTable(name = "association_images", joinColumns = @JoinColumn(name = "association_id"))
+    @Column(name = "image_url")
     private List<String> imagesUrl;
 
-    @OneToMany(mappedBy = "association")
+    @OneToMany(mappedBy = "association", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Expense> expenses;
 
+    @OneToOne
+    @JoinColumn(name = "admin_id")
     private UserEntity admin;
+
+    @OneToMany(mappedBy = "association", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Product> products;
 }
