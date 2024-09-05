@@ -21,4 +21,6 @@ import lombok.*;
         private String imageURL;
 
         private Boolean available;
+
+        private Integer quantity = 0;
 }
