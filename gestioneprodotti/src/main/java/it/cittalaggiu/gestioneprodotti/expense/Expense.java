@@ -6,6 +6,7 @@ import it.cittalaggiu.gestioneprodotti.products.Product;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.time.LocalDate;
 import java.util.List;
 
 @EqualsAndHashCode(callSuper = true)
@@ -29,6 +30,7 @@ public class Expense extends BaseEntity {
     @JoinColumn(name = "association_id")
     private Association association;
 
+    private LocalDate date;
 
     public double getTotalPrice() {
         if (products == null) {

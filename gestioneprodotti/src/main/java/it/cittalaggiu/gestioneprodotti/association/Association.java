@@ -24,7 +24,8 @@ public class Association extends BaseEntity {
     @OneToMany(mappedBy = "association", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Guest> guests;
 
-    private double totalExpenses;
+    @Builder.Default
+    private double totalExpenses = 0;
 
     @ElementCollection
     @CollectionTable(name = "association_images", joinColumns = @JoinColumn(name = "association_id"))

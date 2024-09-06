@@ -24,13 +24,24 @@ public class AssociationService {
         return associationRepository.findById(id);
     }
 
-    public Association createAssociation(Association association,Long idAdmin) {
+    public Association createAssociation(AssoCreateDTO payload) {
 
-        var admin = userRepository.findById(idAdmin);
+        var admin = userRepository.findById(payload.getAdminId());
 
-        admin.ifPresent(association::setAdmin);
+        if(admin.isPresent()) {
 
-        return associationRepository.save(association);
+            Association association = Association.builder()
+                    .withAdmin(admin.get())
+                    .withName(payload.getName())
+                    .build();
+
+            return associationRepository.save(association);
+        }else{
+            throw new RuntimeException("Utente non trovato");
+        }
+
+
+
     }
 
     public void deleteAssociation(Long id) {
