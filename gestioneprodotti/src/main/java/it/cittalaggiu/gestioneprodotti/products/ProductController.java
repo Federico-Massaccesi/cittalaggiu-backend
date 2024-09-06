@@ -1,8 +1,10 @@
 package it.cittalaggiu.gestioneprodotti.products;
 
 import com.cloudinary.Cloudinary;
+import it.cittalaggiu.gestioneprodotti.association.AssociationRepository;
 import it.cittalaggiu.gestioneprodotti.security.ApiValidationException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.rest.webmvc.ResourceNotFoundException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -28,6 +30,9 @@ public class ProductController {
     @Autowired
     ProductRepository prodRepo;
 
+    @Autowired
+    AssociationRepository associationRepository;
+
     @GetMapping
     public ResponseEntity<List<Product>> getAll() {
         return ResponseEntity.ok(service.findAll());
@@ -48,31 +53,37 @@ public class ProductController {
     }
 
     @PostMapping(consumes = { MediaType.MULTIPART_FORM_DATA_VALUE })
-    public ResponseEntity<?> save(@RequestPart("product") @Validated ProductValidPost product,
-                                  @RequestPart("file") MultipartFile file, BindingResult validator) throws IOException {
+    public ResponseEntity<?> createProduct(
+            @RequestPart("product") @Validated ProductValidPost productDTO,
+            @RequestPart("file") MultipartFile file,
+            BindingResult validator,
+            @RequestParam Long associationId) throws IOException {
 
         if (validator.hasErrors()) {
             throw new ApiValidationException(validator.getAllErrors());
         }
 
-        try {
+        var association = associationRepository.findById(associationId)
+                .orElseThrow(() -> new ResourceNotFoundException("Association not found"));
+
+        String imageUrl = null;
+        if (file != null && !file.isEmpty()) {
             var uploadResult = cloudinary.uploader().upload(file.getBytes(),
-                    com.cloudinary.utils.ObjectUtils.asMap("public_id", product.name() + "_avatar"));
-            String url = uploadResult.get("url").toString();
-
-            var newProduct = Product.builder()
-                    .withName(product.name())
-                    .withAvailable(product.available())
-                    .withPrice(product.price())
-                    .withImageURL(url)
-                    .build();
-
-            service.save(newProduct);
-            return ResponseEntity.ok(newProduct);
-        } catch (IOException e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-                    .body("Failed to upload image to Cloudinary");
+                    com.cloudinary.utils.ObjectUtils.asMap("public_id", productDTO.name() + "_avatar"));
+            imageUrl = uploadResult.get("url").toString();
         }
+
+        var newProduct = Product.builder()
+                .withName(productDTO.name())
+                .withPrice(productDTO.price())
+                .withAvailable(productDTO.available())
+                .withQuantity(productDTO.quantity())
+                .withImageURL(imageUrl)
+                .withAssociation(association) // Imposta l'associazione
+                .build();
+
+        service.save(newProduct);
+        return ResponseEntity.ok(newProduct);
     }
 
     @PatchMapping("/{id}/availability")
@@ -134,5 +145,19 @@ public class ProductController {
         String[] parts = imageUrl.split("/");
         String publicIdWithExtension = parts[parts.length - 1];
         return publicIdWithExtension.split("\\.")[0];
+    }
+
+    @PatchMapping("/{id}/quantity")
+    public ResponseEntity<Product> updateProductQuantity(
+            @PathVariable Long id,
+            @RequestBody Map<String, Integer> request
+    ) {
+        Integer quantity = request.get("quantity");
+        if (quantity == null || quantity < 0) {
+            return ResponseEntity.badRequest().body(null);
+        }
+
+        Product updatedProduct = service.updateProductQuantity(id, quantity);
+        return ResponseEntity.ok(updatedProduct);
     }
 }

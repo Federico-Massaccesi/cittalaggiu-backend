@@ -10,6 +10,7 @@ public record ProductValidPost(
         @NotNull
          Double price,
         @NotNull
-        Boolean available
+        Boolean available,
+        Integer quantity
 ) {
 }

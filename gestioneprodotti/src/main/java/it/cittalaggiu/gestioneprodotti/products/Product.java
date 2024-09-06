@@ -1,5 +1,6 @@
 package it.cittalaggiu.gestioneprodotti.products;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import it.cittalaggiu.gestioneprodotti.BaseEntity;
 import it.cittalaggiu.gestioneprodotti.association.Association;
 import it.cittalaggiu.gestioneprodotti.expense.Expense;
@@ -30,6 +31,7 @@ import java.util.List;
 
         @ManyToOne
         @JoinColumn(name = "association_id")
+        @JsonIgnore
         private Association association;
 
         @ManyToMany(mappedBy = "products")

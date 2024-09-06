@@ -1,5 +1,6 @@
 package it.cittalaggiu.gestioneprodotti.products;
 
+import it.cittalaggiu.gestioneprodotti.security.ApiValidationException;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.rest.webmvc.ResourceNotFoundException;
@@ -67,5 +68,18 @@ public class ProductService {
 
     public List<Product> findByNameStartingWith(String prefix) {
         return repository.findByNameStartingWith(prefix);
+    }
+
+    public Product updateProductQuantity(Long id, Integer quantity) {
+        Product product = repository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("Product not found"));
+
+        int newQuantity = product.getQuantity() - quantity;
+        if (newQuantity < 0) {
+            throw new RuntimeException();
+        }
+        product.setQuantity(newQuantity);
+
+        return repository.save(product);
     }
 }

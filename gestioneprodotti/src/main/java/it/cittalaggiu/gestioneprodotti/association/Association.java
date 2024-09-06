@@ -29,7 +29,7 @@ public class Association extends BaseEntity {
 
     @ElementCollection
     @CollectionTable(name = "association_images", joinColumns = @JoinColumn(name = "association_id"))
-    @Column(name = "image_url")
+    @Column(name = "images_url")
     private List<String> imagesUrl;
 
     @OneToMany(mappedBy = "association", cascade = CascadeType.ALL, orphanRemoval = true)
