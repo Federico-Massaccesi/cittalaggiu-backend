@@ -1,6 +1,7 @@
 package it.cittalaggiu.gestioneprodotti.guest;
 
 import com.cloudinary.Cloudinary;
+import com.cloudinary.utils.ObjectUtils;
 import it.cittalaggiu.gestioneprodotti.association.AssociationRepository;
 import it.cittalaggiu.gestioneprodotti.security.ApiValidationException;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -86,4 +87,19 @@ public class GuestController {
         guestService.createGuest(guest);
         return ResponseEntity.ok(guest);
     }
+
+    @PatchMapping(path = "/{id}/image", consumes = { MediaType.MULTIPART_FORM_DATA_VALUE })
+    public ResponseEntity<?> updateGuestImage(@PathVariable Long id, @RequestPart("file") MultipartFile file) throws IOException {
+        var guest = guestService.getGuestById(id).orElseThrow(() -> new ResourceNotFoundException("Guest not found"));
+
+        if (!file.isEmpty()) {
+            var uploadResult = cloudinary.uploader().upload(file.getBytes(), ObjectUtils.asMap("public_id", guest.getName() + "_photo"));
+            String imageUrl = uploadResult.get("url").toString();
+            guest.setImageUrl(imageUrl);
+            guestService.createGuest(guest); // Aggiorna il guest nel database
+        }
+
+        return ResponseEntity.ok(guest);
+    }
+
 }
