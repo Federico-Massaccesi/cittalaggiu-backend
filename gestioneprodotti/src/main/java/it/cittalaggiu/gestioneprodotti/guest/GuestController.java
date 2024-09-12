@@ -88,18 +88,35 @@ public class GuestController {
         return ResponseEntity.ok(guest);
     }
 
+    @PatchMapping("/{id}/reset")
+    public ResponseEntity<Guest> resetGuestDebt(@PathVariable Long id) {
+
+        Guest guest = guestService.getGuestById(id).get();
+        guest.setDebt(0.0);
+        guestService.createGuest(guest);
+        return ResponseEntity.ok(guest);
+    }
+
     @PatchMapping(path = "/{id}/image", consumes = { MediaType.MULTIPART_FORM_DATA_VALUE })
     public ResponseEntity<?> updateGuestImage(@PathVariable Long id, @RequestPart("file") MultipartFile file) throws IOException {
         var guest = guestService.getGuestById(id).orElseThrow(() -> new ResourceNotFoundException("Guest not found"));
+
+        if (guest.getImageUrl() != null && !guest.getImageUrl().isEmpty()) {
+            String publicId = guest.getImageUrl().substring(guest.getImageUrl().lastIndexOf("/") + 1,
+                    guest.getImageUrl().lastIndexOf(".")); // Estrazione dell'ID pubblico
+
+            cloudinary.uploader().destroy(publicId, ObjectUtils.emptyMap());
+        }
 
         if (!file.isEmpty()) {
             var uploadResult = cloudinary.uploader().upload(file.getBytes(), ObjectUtils.asMap("public_id", guest.getName() + "_photo"));
             String imageUrl = uploadResult.get("url").toString();
             guest.setImageUrl(imageUrl);
-            guestService.createGuest(guest); // Aggiorna il guest nel database
+            guestService.createGuest(guest);
         }
 
         return ResponseEntity.ok(guest);
     }
+
 
 }

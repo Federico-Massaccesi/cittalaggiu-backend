@@ -3,7 +3,6 @@ package it.cittalaggiu.gestioneprodotti.products;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import it.cittalaggiu.gestioneprodotti.BaseEntity;
 import it.cittalaggiu.gestioneprodotti.association.Association;
-import it.cittalaggiu.gestioneprodotti.expense.Expense;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -19,21 +18,21 @@ import java.util.List;
     @Table(name = "products")
     public class Product extends BaseEntity {
 
-        private String name;
+    private String name;
 
-        private Double price;
+    private Double purchasePrice;  // Prezzo di acquisto
 
-        private String imageURL;
+    private Double salePrice;      // Prezzo di vendita
 
-        private Boolean available;
+    private String imageURL;
 
-        private Integer quantity = 0;
+    private Boolean available;
 
-        @ManyToOne
-        @JoinColumn(name = "association_id")
-        @JsonIgnore
-        private Association association;
+    private Integer quantity = 0;
 
-        @ManyToMany(mappedBy = "products")
-        private List<Expense> expenses;
+    @ManyToOne
+    @JoinColumn(name = "association_id")
+    @JsonIgnore
+    private Association association;
+
 }

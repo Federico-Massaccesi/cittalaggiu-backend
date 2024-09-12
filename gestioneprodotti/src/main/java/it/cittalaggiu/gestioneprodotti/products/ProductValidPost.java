@@ -8,8 +8,11 @@ public record ProductValidPost(
         @NotBlank
          String name,
         @NotNull
-         Double price,
-        @NotNull
+         Double salePrice,
+
+        Double purchasePrice,
+
+                @NotNull
         Boolean available,
         Integer quantity
 ) {

@@ -75,7 +75,8 @@ public class ProductController {
 
         var newProduct = Product.builder()
                 .withName(productDTO.name())
-                .withPrice(productDTO.price())
+                .withPurchasePrice(productDTO.purchasePrice())  // Imposta il prezzo di acquisto
+                .withSalePrice(productDTO.salePrice())          // Imposta il prezzo di vendita
                 .withAvailable(productDTO.available())
                 .withQuantity(productDTO.quantity())
                 .withImageURL(imageUrl)
@@ -125,7 +126,8 @@ public class ProductController {
 
                 existingProduct.setName(product.name());
                 existingProduct.setAvailable(product.available());
-                existingProduct.setPrice(product.price());
+                existingProduct.setPurchasePrice(product.purchasePrice());  // Aggiorna il prezzo di acquisto
+                existingProduct.setSalePrice(product.salePrice());
             }
 
             Product updatedProduct = service.updateProduct(id, existingProduct);
@@ -159,5 +161,17 @@ public class ProductController {
 
         Product updatedProduct = service.updateProductQuantity(id, quantity);
         return ResponseEntity.ok(updatedProduct);
+    }
+
+    @PatchMapping("/{id}/addQuantity")
+    public ResponseEntity<?> addProductQuantity(
+            @PathVariable("id") Long id,
+            @RequestParam("quantity") Integer quantity) {
+        try {
+            service.addProductQuantity(id, quantity);
+            return ResponseEntity.ok().build();
+        } catch (ResourceNotFoundException e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Product not found");
+        }
     }
 }

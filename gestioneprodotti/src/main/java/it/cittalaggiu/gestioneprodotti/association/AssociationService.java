@@ -4,6 +4,7 @@ import com.cloudinary.Cloudinary;
 import com.cloudinary.utils.ObjectUtils;
 import it.cittalaggiu.gestioneprodotti.UserEntity.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.rest.webmvc.ResourceNotFoundException;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -52,18 +53,14 @@ public class AssociationService {
         associationRepository.deleteById(id);
     }
 
-    public Association addImageToAssociation(Long id, MultipartFile file) throws IOException {
-        Optional<Association> existingAssociationOpt = associationRepository.findById(id);
-        if (existingAssociationOpt.isPresent()) {
-            Association existingAssociation = existingAssociationOpt.get();
+    public void addExpense(Long associationId, Double totalExpense) throws ResourceNotFoundException {
+        Association association = associationRepository.findById(associationId)
+                .orElseThrow(() -> new ResourceNotFoundException("Association not found"));
 
-            var uploadResult = cloudinary.uploader().upload(file.getBytes(), ObjectUtils.emptyMap());
-            String url = uploadResult.get("url").toString();
+        double updatedTotalExpenses = association.getTotalExpenses() + totalExpense;
+        association.setTotalExpenses(updatedTotalExpenses);
 
-            existingAssociation.getImagesUrl().add(url);
-            return associationRepository.save(existingAssociation);
-        } else {
-            throw new RuntimeException("Associazione non trovata");
-        }
+        associationRepository.save(association);
     }
 }
+

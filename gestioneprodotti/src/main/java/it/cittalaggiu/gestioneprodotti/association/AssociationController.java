@@ -2,7 +2,10 @@ package it.cittalaggiu.gestioneprodotti.association;
 
 
 import com.cloudinary.Cloudinary;
+import it.cittalaggiu.gestioneprodotti.monthlyExpense.MonthlyExpense;
+import it.cittalaggiu.gestioneprodotti.monthlyExpense.MonthlyExpenseRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.rest.webmvc.ResourceNotFoundException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -10,6 +13,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 @RestController
@@ -21,6 +25,9 @@ public class AssociationController {
 
     @Autowired
     Cloudinary cloudinary;
+
+    @Autowired
+    MonthlyExpenseRepository monthlyExpenseRepository;
 
     @GetMapping
     public List<Association> getAllAssociations() {
@@ -44,18 +51,23 @@ public class AssociationController {
         return ResponseEntity.noContent().build();
     }
 
-    @PatchMapping("/{id}/addImage")
-    public ResponseEntity<?> addImageToAssociation(@PathVariable Long id,
-                                                   @RequestParam("file") MultipartFile file) {
+    @PatchMapping("/{id}/addExpense")
+    public ResponseEntity<?> addExpenseToAssociation(
+            @PathVariable("id") Long id,
+            @RequestBody Map<String, Double> request) {
+        Double totalExpense = request.get("totalExpense");
         try {
-            Association updatedAssociation = associationService.addImageToAssociation(id, file);
-            return ResponseEntity.ok(updatedAssociation);
-        } catch (IOException e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-                    .body("Failed to upload image: " + e.getMessage());
-        } catch (RuntimeException e) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND)
-                    .body(e.getMessage());
+            associationService.addExpense(id, totalExpense);
+            return ResponseEntity.ok().build();
+        } catch (ResourceNotFoundException e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Association not found");
         }
     }
+
+    @GetMapping("/{id}/monthly-expenses")
+    public ResponseEntity<List<MonthlyExpense>> getMonthlyExpenses(@PathVariable("id") Long id) {
+        List<MonthlyExpense> expenses = monthlyExpenseRepository.findByAssociationId(id);
+        return ResponseEntity.ok(expenses);
+    }
+
 }

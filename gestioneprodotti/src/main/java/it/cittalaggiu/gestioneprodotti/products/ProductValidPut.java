@@ -9,8 +9,10 @@ import java.util.List;
 
 public record ProductValidPut(
         String name,
-        Double price,
-        Boolean available
+        Double salePrice,
+        Double purchasePrice,
+
+                Boolean available
 ) {
 
 }

@@ -55,7 +55,6 @@ public class ProductService {
                 .orElseThrow(() -> new ResourceNotFoundException("Product not found with id " + productId));
 
         product.setName(updatedProduct.getName());
-        product.setPrice(updatedProduct.getPrice());
         product.setAvailable(updatedProduct.getAvailable());
         product.setImageURL(updatedProduct.getImageURL());
 
@@ -81,5 +80,13 @@ public class ProductService {
         product.setQuantity(newQuantity);
 
         return repository.save(product);
+    }
+
+    public void addProductQuantity(Long id, Integer quantity) {
+        Product product = repository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("Product not found"));
+
+        product.setQuantity(product.getQuantity() + quantity);
+        repository.save(product);
     }
 }
