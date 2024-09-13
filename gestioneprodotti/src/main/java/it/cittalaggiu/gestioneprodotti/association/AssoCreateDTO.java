@@ -8,4 +8,6 @@ public class AssoCreateDTO {
     private String name;
 
     private Long adminId;
+
+    private double monthlyFee;
 }

@@ -31,6 +31,8 @@ public class Association extends BaseEntity {
     @Builder.Default
     private double totalIncome = 0;
 
+    private double monthlyFee;
+
     @OneToOne
     @JoinColumn(name = "admin_id")
     private UserEntity admin;

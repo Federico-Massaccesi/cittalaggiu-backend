@@ -94,4 +94,18 @@ public class AssociationController {
         }
     }
 
+    @PatchMapping("/{id}/monthly-fee")
+    public ResponseEntity<?> updateMonthlyFee(
+            @PathVariable("id") Long id,
+            @RequestBody Map<String, Double> request) {
+        Double monthlyFee = request.get("monthlyFee");
+        try {
+            associationService.updateMonthlyFee(id, monthlyFee);
+            return ResponseEntity.ok().build();
+        } catch (ResourceNotFoundException e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Association not found");
+        }
+    }
+
+
 }

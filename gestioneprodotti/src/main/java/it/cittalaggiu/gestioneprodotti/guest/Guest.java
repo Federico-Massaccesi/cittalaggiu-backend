@@ -25,6 +25,9 @@ public class Guest extends BaseEntity {
     @Builder.Default
     private Double debt = 0.00;
 
+    @Builder.Default
+    private Boolean monthlyPayment = false;
+
     @ManyToOne
     @JsonIgnore
     private Association association;

@@ -11,4 +11,6 @@ public class GuestDTO {
     private String imageUrl;
     private Double debt;
     private Long associationId;
+    private Boolean monthlyPayment;
+
 }

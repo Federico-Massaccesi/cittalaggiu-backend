@@ -41,6 +41,7 @@ public class AssociationService {
             Association association = Association.builder()
                     .withAdmin(admin.get())
                     .withName(payload.getName())
+                    .withMonthlyFee(payload.getMonthlyFee())
                     .build();
 
             return associationRepository.save(association);
@@ -69,6 +70,15 @@ public class AssociationService {
 
         double updatedTotalIncome = association.getTotalIncome() + income;
         association.setTotalIncome(updatedTotalIncome);
+
+        associationRepository.save(association);
+    }
+
+    public void updateMonthlyFee(Long associationId, Double monthlyFee) throws ResourceNotFoundException {
+        Association association = associationRepository.findById(associationId)
+                .orElseThrow(() -> new ResourceNotFoundException("Association not found"));
+
+        association.setMonthlyFee(monthlyFee);
 
         associationRepository.save(association);
     }

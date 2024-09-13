@@ -64,12 +64,14 @@ public class GuestController {
         var newGuest = Guest.builder()
                 .withName(guestDTO.getName())
                 .withImageUrl(imageUrl)
-                .withAssociation(association) // Usa l'associazione direttamente
+                .withAssociation(association)
+                .withMonthlyPayment(false) // Imposta il valore di default
                 .build();
 
         guestService.createGuest(newGuest);
         return ResponseEntity.ok(convertToDTO(newGuest));
     }
+
 
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteGuest(@PathVariable Long id) {
@@ -121,9 +123,17 @@ public class GuestController {
                 .withImageUrl(guest.getImageUrl())
                 .withDebt(guest.getDebt())
                 .withAssociationId(guest.getAssociation() != null ? guest.getAssociation().getId() : null)
+                .withMonthlyPayment(guest.getMonthlyPayment())
                 .build();
     }
 
-
+    @PatchMapping("/{id}/monthly-payment")
+    public ResponseEntity<GuestDTO> updateMonthlyPayment(@PathVariable Long id, @RequestBody Map<String, Boolean> request) {
+        boolean monthlyPayment = request.get("monthlyPayment");
+        Guest guest = guestService.getGuestById(id).get();
+        guest.setMonthlyPayment(monthlyPayment);
+        guestService.createGuest(guest);
+        return ResponseEntity.ok(convertToDTO(guest));
+    }
 
 }
