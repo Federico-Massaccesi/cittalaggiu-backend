@@ -4,6 +4,8 @@ package it.cittalaggiu.gestioneprodotti.association;
 import com.cloudinary.Cloudinary;
 import it.cittalaggiu.gestioneprodotti.monthlyExpense.MonthlyExpense;
 import it.cittalaggiu.gestioneprodotti.monthlyExpense.MonthlyExpenseRepository;
+import it.cittalaggiu.gestioneprodotti.monthlyIncome.MonthlyIncome;
+import it.cittalaggiu.gestioneprodotti.monthlyIncome.MonthlyIncomeRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.rest.webmvc.ResourceNotFoundException;
 import org.springframework.http.HttpStatus;
@@ -28,6 +30,9 @@ public class AssociationController {
 
     @Autowired
     MonthlyExpenseRepository monthlyExpenseRepository;
+
+    @Autowired
+    MonthlyIncomeRepository monthlyIncomeRepository;
 
     @GetMapping
     public List<Association> getAllAssociations() {
@@ -68,6 +73,12 @@ public class AssociationController {
     public ResponseEntity<List<MonthlyExpense>> getMonthlyExpenses(@PathVariable("id") Long id) {
         List<MonthlyExpense> expenses = monthlyExpenseRepository.findByAssociationId(id);
         return ResponseEntity.ok(expenses);
+    }
+
+    @GetMapping("/{id}/monthly-incomes")
+    public ResponseEntity<List<MonthlyIncome>> getMonthlyIncomes(@PathVariable("id") Long id) {
+        List<MonthlyIncome> incomes = monthlyIncomeRepository.findByAssociationId(id);
+        return ResponseEntity.ok(incomes);
     }
 
     @PatchMapping("/{id}/addIncome")
