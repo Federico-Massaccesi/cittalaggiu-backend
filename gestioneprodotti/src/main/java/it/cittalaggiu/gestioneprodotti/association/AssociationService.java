@@ -62,5 +62,16 @@ public class AssociationService {
 
         associationRepository.save(association);
     }
+
+    public void addIncome(Long associationId, Double income) throws ResourceNotFoundException {
+        Association association = associationRepository.findById(associationId)
+                .orElseThrow(() -> new ResourceNotFoundException("Association not found"));
+
+        double updatedTotalIncome = association.getTotalIncome() + income;
+        association.setTotalIncome(updatedTotalIncome);
+
+        associationRepository.save(association);
+    }
+
 }
 

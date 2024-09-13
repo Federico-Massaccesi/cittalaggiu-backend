@@ -28,4 +28,5 @@ public class Guest extends BaseEntity {
     @ManyToOne
     @JsonIgnore
     private Association association;
+
 }

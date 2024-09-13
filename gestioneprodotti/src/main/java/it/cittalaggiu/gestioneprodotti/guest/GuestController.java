@@ -27,31 +27,29 @@ public class GuestController {
     private GuestService guestService;
 
     @Autowired
-    AssociationRepository associationRepository;
+    private AssociationRepository associationRepository;
 
     @Autowired
-    Cloudinary cloudinary;
+    private Cloudinary cloudinary;
 
     @GetMapping
-    public List<Guest> getAllGuests() {
-        return guestService.getAllGuests();
+    public List<GuestDTO> getAllGuests() {
+        return guestService.getAllGuests().stream()
+                .map(this::convertToDTO)
+                .toList();
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<Guest> getGuestById(@PathVariable Long id) {
+    public ResponseEntity<GuestDTO> getGuestById(@PathVariable Long id) {
         Optional<Guest> guest = guestService.getGuestById(id);
-        return guest.map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.notFound().build());
+        return guest.map(g -> ResponseEntity.ok(convertToDTO(g)))
+                .orElseGet(() -> ResponseEntity.notFound().build());
     }
 
     @PostMapping(consumes = { MediaType.MULTIPART_FORM_DATA_VALUE })
-    public ResponseEntity<?> createGuest(@RequestPart("guest") @Validated GuestCreateDTO guestDTO,
-                                         @RequestPart(value = "file", required = false) MultipartFile file,
-                                         BindingResult validator,
-                                         @RequestParam Long associationId) throws IOException {
-
-        if (validator.hasErrors()) {
-            throw new ApiValidationException(validator.getAllErrors());
-        }
+    public ResponseEntity<GuestDTO> createGuest(@RequestPart("guest") GuestCreateDTO guestDTO,
+                                                @RequestPart(value = "file", required = false) MultipartFile file,
+                                                @RequestParam Long associationId) throws IOException {
 
         var association = associationRepository.findById(associationId)
                 .orElseThrow(() -> new ResourceNotFoundException("Association not found"));
@@ -59,18 +57,18 @@ public class GuestController {
         String imageUrl = null;
         if (file != null && !file.isEmpty()) {
             var uploadResult = cloudinary.uploader().upload(file.getBytes(),
-                    com.cloudinary.utils.ObjectUtils.asMap("public_id", guestDTO.getName() + "_avatar"));
+                    ObjectUtils.asMap("public_id", guestDTO.getName() + "_avatar"));
             imageUrl = uploadResult.get("url").toString();
         }
 
         var newGuest = Guest.builder()
                 .withName(guestDTO.getName())
                 .withImageUrl(imageUrl)
-                .withAssociation(association)
+                .withAssociation(association) // Usa l'associazione direttamente
                 .build();
 
         guestService.createGuest(newGuest);
-        return ResponseEntity.ok(newGuest);
+        return ResponseEntity.ok(convertToDTO(newGuest));
     }
 
     @DeleteMapping("/{id}")
@@ -80,31 +78,29 @@ public class GuestController {
     }
 
     @PatchMapping("/{id}/debt")
-    public ResponseEntity<Guest> updateGuestDebt(@PathVariable Long id, @RequestBody Map<String, Double> request) {
+    public ResponseEntity<GuestDTO> updateGuestDebt(@PathVariable Long id, @RequestBody Map<String, Double> request) {
         double debt = request.get("debt");
         Guest guest = guestService.getGuestById(id).get();
         guest.setDebt(debt);
         guestService.createGuest(guest);
-        return ResponseEntity.ok(guest);
+        return ResponseEntity.ok(convertToDTO(guest));
     }
 
     @PatchMapping("/{id}/reset")
-    public ResponseEntity<Guest> resetGuestDebt(@PathVariable Long id) {
-
+    public ResponseEntity<GuestDTO> resetGuestDebt(@PathVariable Long id) {
         Guest guest = guestService.getGuestById(id).get();
         guest.setDebt(0.0);
         guestService.createGuest(guest);
-        return ResponseEntity.ok(guest);
+        return ResponseEntity.ok(convertToDTO(guest));
     }
 
     @PatchMapping(path = "/{id}/image", consumes = { MediaType.MULTIPART_FORM_DATA_VALUE })
-    public ResponseEntity<?> updateGuestImage(@PathVariable Long id, @RequestPart("file") MultipartFile file) throws IOException {
+    public ResponseEntity<GuestDTO> updateGuestImage(@PathVariable Long id, @RequestPart("file") MultipartFile file) throws IOException {
         var guest = guestService.getGuestById(id).orElseThrow(() -> new ResourceNotFoundException("Guest not found"));
 
         if (guest.getImageUrl() != null && !guest.getImageUrl().isEmpty()) {
             String publicId = guest.getImageUrl().substring(guest.getImageUrl().lastIndexOf("/") + 1,
-                    guest.getImageUrl().lastIndexOf(".")); // Estrazione dell'ID pubblico
-
+                    guest.getImageUrl().lastIndexOf("."));
             cloudinary.uploader().destroy(publicId, ObjectUtils.emptyMap());
         }
 
@@ -115,8 +111,19 @@ public class GuestController {
             guestService.createGuest(guest);
         }
 
-        return ResponseEntity.ok(guest);
+        return ResponseEntity.ok(convertToDTO(guest));
     }
+
+    private GuestDTO convertToDTO(Guest guest) {
+        return GuestDTO.builder()
+                .withId(guest.getId())
+                .withName(guest.getName())
+                .withImageUrl(guest.getImageUrl())
+                .withDebt(guest.getDebt())
+                .withAssociationId(guest.getAssociation() != null ? guest.getAssociation().getId() : null)
+                .build();
+    }
+
 
 
 }

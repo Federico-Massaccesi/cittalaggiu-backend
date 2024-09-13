@@ -70,4 +70,17 @@ public class AssociationController {
         return ResponseEntity.ok(expenses);
     }
 
+    @PatchMapping("/{id}/addIncome")
+    public ResponseEntity<?> addIncomeToAssociation(
+            @PathVariable("id") Long id,
+            @RequestBody Map<String, Double> request) {
+        Double income = request.get("income");
+        try {
+            associationService.addIncome(id, income);
+            return ResponseEntity.ok().build();
+        } catch (ResourceNotFoundException e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Association not found");
+        }
+    }
+
 }
