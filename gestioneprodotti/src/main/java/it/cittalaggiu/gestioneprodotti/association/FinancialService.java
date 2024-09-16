@@ -37,7 +37,7 @@ public class FinancialService {
     private GuestService guestService;
     //@Scheduled(cron = "0 0 0 1 * ?") // Esegue il primo giorno di ogni mese
 
-    @Scheduled(cron = "0 */2 * * * ?")
+    @Scheduled(cron = "0 */1 * * * ?")
     public void manageMonthlyFinances() {
         List<Association> associations = associationRepository.findAll();
 
@@ -56,6 +56,7 @@ public class FinancialService {
                         .withGuestsFee(guestsWithMonthlyPayment)
                         .withMonth(LocalDate.now().minusMonths(1).withDayOfMonth(1)) // Setta il mese precedente
                         .withAmount(totalIncomeFromFees)  // Setta il totale delle quote versate
+                        .withAssociation(association)
                         .build();
 
                 // Salva la nuova entità GuestsFee

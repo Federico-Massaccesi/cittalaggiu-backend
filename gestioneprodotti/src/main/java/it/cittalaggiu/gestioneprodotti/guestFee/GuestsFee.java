@@ -1,5 +1,6 @@
 package it.cittalaggiu.gestioneprodotti.guestFee;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import it.cittalaggiu.gestioneprodotti.BaseEntity;
 import it.cittalaggiu.gestioneprodotti.association.Association;
 import it.cittalaggiu.gestioneprodotti.guest.Guest;
@@ -15,10 +16,11 @@ import java.util.List;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder(setterPrefix = "with")
-@Table(name = "GuestsFee")
+@Table(name = "guests_fee")
 public class GuestsFee extends BaseEntity {
 
     @ManyToOne
+    @JoinColumn(name = "association_id", nullable = false) // Specifica la colonna association_id
     private Association association;
 
     @ManyToMany
