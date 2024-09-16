@@ -2,6 +2,8 @@ package it.cittalaggiu.gestioneprodotti.association;
 
 
 import com.cloudinary.Cloudinary;
+import it.cittalaggiu.gestioneprodotti.guestFee.GuestsFee;
+import it.cittalaggiu.gestioneprodotti.guestFee.GuestsFeeRepository;
 import it.cittalaggiu.gestioneprodotti.monthlyExpense.MonthlyExpense;
 import it.cittalaggiu.gestioneprodotti.monthlyExpense.MonthlyExpenseRepository;
 import it.cittalaggiu.gestioneprodotti.monthlyIncome.MonthlyIncome;
@@ -33,6 +35,9 @@ public class AssociationController {
 
     @Autowired
     MonthlyIncomeRepository monthlyIncomeRepository;
+
+    @Autowired
+    GuestsFeeRepository guestsFeeRepository;
 
     @GetMapping
     public List<Association> getAllAssociations() {
@@ -80,6 +85,13 @@ public class AssociationController {
         List<MonthlyIncome> incomes = monthlyIncomeRepository.findByAssociationId(id);
         return ResponseEntity.ok(incomes);
     }
+
+    @GetMapping("/{id}/guests-fee")
+    public ResponseEntity<List<GuestsFee>> getGuestsFee(@PathVariable("id") Long id) {
+        List<GuestsFee> guestsFees = guestsFeeRepository.findByAssociationId(id);
+        return ResponseEntity.ok(guestsFees);
+    }
+
 
     @PatchMapping("/{id}/addIncome")
     public ResponseEntity<?> addIncomeToAssociation(
