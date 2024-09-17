@@ -27,4 +27,8 @@ public class GuestService {
     public void deleteGuest(Long id) {
         guestRepository.deleteById(id);
     }
+
+    public List<Guest> searchGuestsByName(String query) {
+        return guestRepository.findByNameContainingIgnoreCase(query);
+    }
 }

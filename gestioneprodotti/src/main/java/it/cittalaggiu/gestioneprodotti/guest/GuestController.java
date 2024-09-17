@@ -46,6 +46,17 @@ public class GuestController {
                 .orElseGet(() -> ResponseEntity.notFound().build());
     }
 
+    @GetMapping("/search")
+    public List<GuestDTO> searchGuests(@RequestParam(name = "q", required = false) String query) {
+        if (query == null || query.isEmpty()) {
+            return List.of();
+        } else {
+            return guestService.searchGuestsByName(query).stream()
+                    .map(this::convertToDTO)
+                    .toList();
+        }
+    }
+
     @PostMapping(consumes = { MediaType.MULTIPART_FORM_DATA_VALUE })
     public ResponseEntity<GuestDTO> createGuest(@RequestPart("guest") GuestCreateDTO guestDTO,
                                                 @RequestPart(value = "file", required = false) MultipartFile file,
