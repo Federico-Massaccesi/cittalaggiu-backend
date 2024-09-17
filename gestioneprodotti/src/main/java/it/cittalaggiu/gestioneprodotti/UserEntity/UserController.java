@@ -43,6 +43,7 @@ try {
                     .withUsername(model.username())
                     .withPassword(model.password())
                     .withRoles(model.roles())
+                    .withPin(model.pin())
                     .build());
 
     return  new ResponseEntity<> (registeredUser, HttpStatus.OK);

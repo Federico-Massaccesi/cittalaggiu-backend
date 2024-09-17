@@ -17,6 +17,9 @@ public record RegisterUserModel(
         @NotBlank(message = "La password non può contenere solo spazi vuoti")
         @Size(max = 125, message ="La password è troppo lunga max 20 caratteri")
         String password,
+        @NotBlank
+                @Size(max = 4)
+        String pin,
         List<Roles> roles
 
 

@@ -21,6 +21,8 @@ public class UserEntity extends BaseEntity {
 
     private String password;
 
+    private String pin;
+
     @ManyToMany(fetch = FetchType.EAGER)
     private final List<Roles> roles = new ArrayList<>();
 

@@ -15,6 +15,7 @@ import java.util.List;
 public class RegisterUserDTO {
     String username;
     String password;
+    String pin;
     List<Roles> roles;
 
 

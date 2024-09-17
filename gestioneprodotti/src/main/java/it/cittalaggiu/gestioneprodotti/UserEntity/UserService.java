@@ -70,6 +70,7 @@ public class UserService {
         BeanUtils.copyProperties(register, u);
 
         u.setPassword(encoder.encode(register.getPassword()));
+        u.setPin(encoder.encode(register.getPin()));
         u.getRoles().add(roles);
         userRepository.save(u);
 
