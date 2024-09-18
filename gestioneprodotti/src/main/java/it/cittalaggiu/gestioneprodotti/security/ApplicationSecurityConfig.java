@@ -58,6 +58,8 @@ public class ApplicationSecurityConfig {
                                 .requestMatchers(HttpMethod.GET,"/**").permitAll()
                                 .requestMatchers(HttpMethod.PATCH,"/**").permitAll()
                                 .requestMatchers(HttpMethod.DELETE,"/**").permitAll()
+                                .requestMatchers(HttpMethod.PUT,"/**").permitAll()
+
 
 
                 )

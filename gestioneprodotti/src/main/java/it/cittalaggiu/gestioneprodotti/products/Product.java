@@ -20,9 +20,9 @@ import java.util.List;
 
     private String name;
 
-    private Double purchasePrice;  // Prezzo di acquisto
+    private Double purchasePrice;
 
-    private Double salePrice;      // Prezzo di vendita
+    private Double salePrice;
 
     private String imageURL;
 

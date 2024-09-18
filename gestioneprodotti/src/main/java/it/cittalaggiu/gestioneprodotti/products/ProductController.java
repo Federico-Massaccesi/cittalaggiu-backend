@@ -126,7 +126,7 @@ public class ProductController {
 
                 existingProduct.setName(product.name());
                 existingProduct.setAvailable(product.available());
-                existingProduct.setPurchasePrice(product.purchasePrice());  // Aggiorna il prezzo di acquisto
+                existingProduct.setPurchasePrice(product.purchasePrice());
                 existingProduct.setSalePrice(product.salePrice());
             }
 
