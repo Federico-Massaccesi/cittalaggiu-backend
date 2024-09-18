@@ -75,15 +75,9 @@ try {
         return ResponseEntity.ok(user.updateUser(id, updatedUser));
     }
 
-//    @PatchMapping("/{id}/debt/add")
-//    public ResponseEntity<UserEntity> addToDebt(@PathVariable Long id, @RequestParam Integer amount) {
-//        UserEntity updatedUser = user.addToDebt(id, amount);
-//        return ResponseEntity.ok(updatedUser);
-//    }
-//
-//    @PatchMapping("/{id}/debt/reset")
-//    public ResponseEntity<UserEntity> resetDebt(@PathVariable Long id) {
-//        UserEntity updatedUser = user.resetDebt(id);
-//        return ResponseEntity.ok(updatedUser);
-//    }
+    @PostMapping("/{id}/validatePin")
+    public ResponseEntity<Boolean> validatePin(@PathVariable Long id, @RequestBody String pin) {
+        boolean isPinValid = user.validatePin(id, pin);
+        return ResponseEntity.ok(isPinValid);
+    }
 }
