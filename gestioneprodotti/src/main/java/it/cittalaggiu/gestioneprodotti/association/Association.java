@@ -33,7 +33,7 @@ public class Association extends BaseEntity {
 
     private double monthlyFee;
 
-    @OneToOne
+    @ManyToOne
     @JoinColumn(name = "admin_id")
     private UserEntity admin;
 

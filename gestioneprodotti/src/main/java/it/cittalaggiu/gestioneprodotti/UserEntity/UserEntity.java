@@ -1,5 +1,6 @@
 package it.cittalaggiu.gestioneprodotti.UserEntity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import it.cittalaggiu.gestioneprodotti.BaseEntity;
 import it.cittalaggiu.gestioneprodotti.association.Association;
 import jakarta.persistence.*;
@@ -26,7 +27,7 @@ public class UserEntity extends BaseEntity {
     @ManyToMany(fetch = FetchType.EAGER)
     private final List<Roles> roles = new ArrayList<>();
 
-    @OneToOne
-    @JoinColumn(name = "association_id")
-    private Association association;
+    @OneToMany(mappedBy = "admin", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @JsonIgnore
+    private List<Association> associations = new ArrayList<>();
 }
