@@ -2,12 +2,15 @@ package it.cittalaggiu.gestioneprodotti.association;
 
 
 import com.cloudinary.Cloudinary;
+import com.cloudinary.utils.ObjectUtils;
+import it.cittalaggiu.gestioneprodotti.guest.Guest;
 import it.cittalaggiu.gestioneprodotti.guestFee.GuestsFee;
 import it.cittalaggiu.gestioneprodotti.guestFee.GuestsFeeRepository;
 import it.cittalaggiu.gestioneprodotti.monthlyExpense.MonthlyExpense;
 import it.cittalaggiu.gestioneprodotti.monthlyExpense.MonthlyExpenseRepository;
 import it.cittalaggiu.gestioneprodotti.monthlyIncome.MonthlyIncome;
 import it.cittalaggiu.gestioneprodotti.monthlyIncome.MonthlyIncomeRepository;
+import it.cittalaggiu.gestioneprodotti.products.Product;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.rest.webmvc.ResourceNotFoundException;
 import org.springframework.http.HttpStatus;
@@ -56,7 +59,40 @@ public class AssociationController {
 
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteAssociation(@PathVariable Long id) {
+        var association = associationService.getAssociationById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("Association not found"));
+
+        // Elimina immagini per i soci (members)
+        List<Guest> members = association.getGuests();  // Assicurati che l'associazione abbia un metodo per ottenere i soci
+        for (Guest member : members) {
+            if (member.getImageUrl() != null && !member.getImageUrl().isEmpty()) {
+                String publicId = extractPublicIdFromUrl(member.getImageUrl());
+                try {
+                    cloudinary.uploader().destroy(publicId, ObjectUtils.emptyMap());
+                } catch (IOException e) {
+                    // Log e gestione dell'errore
+                    e.printStackTrace();
+                }
+            }
+        }
+
+        // Elimina immagini per i prodotti (products)
+        List<Product> products = association.getProducts();  // Assicurati che l'associazione abbia un metodo per ottenere i prodotti
+        for (Product product : products) {
+            if (product.getImageURL() != null && !product.getImageURL().isEmpty()) {
+                String publicId = extractPublicIdFromUrl(product.getImageURL());
+                try {
+                    cloudinary.uploader().destroy(publicId, ObjectUtils.emptyMap());
+                } catch (IOException e) {
+                    // Log e gestione dell'errore
+                    e.printStackTrace();
+                }
+            }
+        }
+
+        // Elimina l'associazione dopo aver gestito le immagini
         associationService.deleteAssociation(id);
+
         return ResponseEntity.noContent().build();
     }
 
@@ -119,4 +155,7 @@ public class AssociationController {
     }
 
 
+    private String extractPublicIdFromUrl(String imageUrl) {
+        return imageUrl.substring(imageUrl.lastIndexOf("/") + 1, imageUrl.lastIndexOf("."));
+    }
 }
