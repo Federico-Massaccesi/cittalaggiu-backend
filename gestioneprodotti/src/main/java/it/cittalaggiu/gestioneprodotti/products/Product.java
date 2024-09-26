@@ -26,8 +26,6 @@ import java.util.List;
 
     private String imageURL;
 
-    private Boolean available;
-
     private Integer quantity = 0;
 
     @ManyToOne

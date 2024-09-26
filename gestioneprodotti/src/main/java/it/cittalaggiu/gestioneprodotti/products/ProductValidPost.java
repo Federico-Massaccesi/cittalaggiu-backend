@@ -13,7 +13,6 @@ public record ProductValidPost(
         Double purchasePrice,
 
                 @NotNull
-        Boolean available,
         Integer quantity
 ) {
 }

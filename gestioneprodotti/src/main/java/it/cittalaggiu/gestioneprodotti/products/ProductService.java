@@ -1,6 +1,5 @@
 package it.cittalaggiu.gestioneprodotti.products;
 
-import it.cittalaggiu.gestioneprodotti.security.ApiValidationException;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.rest.webmvc.ResourceNotFoundException;
@@ -40,14 +39,6 @@ public class ProductService {
         }
     }
 
-    @Transactional
-    public Product updateProductAvailability(Long productId, boolean available) {
-        Product product = repository.findById(productId)
-                .orElseThrow(() -> new ResourceNotFoundException("Product not found with id " + productId));
-
-        product.setAvailable(available);
-        return repository.save(product);
-    }
 
     @Transactional
     public Product updateProduct(Long productId, Product updatedProduct) {
@@ -55,7 +46,6 @@ public class ProductService {
                 .orElseThrow(() -> new ResourceNotFoundException("Product not found with id " + productId));
 
         product.setName(updatedProduct.getName());
-        product.setAvailable(updatedProduct.getAvailable());
         product.setImageURL(updatedProduct.getImageURL());
 
         return repository.save(product);

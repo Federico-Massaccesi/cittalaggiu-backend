@@ -77,7 +77,6 @@ public class ProductController {
                 .withName(productDTO.name())
                 .withPurchasePrice(productDTO.purchasePrice())  // Imposta il prezzo di acquisto
                 .withSalePrice(productDTO.salePrice())          // Imposta il prezzo di vendita
-                .withAvailable(productDTO.available())
                 .withQuantity(productDTO.quantity())
                 .withImageURL(imageUrl)
                 .withAssociation(association) // Imposta l'associazione
@@ -87,15 +86,6 @@ public class ProductController {
         return ResponseEntity.ok(newProduct);
     }
 
-    @PatchMapping("/{id}/availability")
-    public ResponseEntity<Product> updateProductAvailability(
-            @PathVariable Long id,
-            @RequestBody Map<String, Boolean> request
-    ) {
-        boolean available = request.get("available");
-        Product updatedProduct = service.updateProductAvailability(id, available);
-        return ResponseEntity.ok(updatedProduct);
-    }
 
     @PutMapping(value = "/{id}", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<?> updateProduct(
@@ -125,7 +115,6 @@ public class ProductController {
                 }
 
                 existingProduct.setName(product.name());
-                existingProduct.setAvailable(product.available());
                 existingProduct.setPurchasePrice(product.purchasePrice());
                 existingProduct.setSalePrice(product.salePrice());
             }
