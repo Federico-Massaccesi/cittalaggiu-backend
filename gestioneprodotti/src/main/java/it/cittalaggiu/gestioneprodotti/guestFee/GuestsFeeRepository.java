@@ -9,5 +9,7 @@ public interface GuestsFeeRepository extends JpaRepository<GuestsFee,Long> {
 
     List<GuestsFee> findByAssociationId(Long associationId);
 
+    List<GuestsFee> findByGuestsFee_Id(Long guestId);
+
 
 }

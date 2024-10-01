@@ -15,4 +15,6 @@ public interface GuestRepository extends JpaRepository<Guest,Long> {
     @Query("SELECT g FROM Guest g WHERE LOWER(g.name) LIKE LOWER(CONCAT('%', :prefix, '%'))")
     List<Guest> findByNameContainingIgnoreCase(String prefix);
 
+
+
 }

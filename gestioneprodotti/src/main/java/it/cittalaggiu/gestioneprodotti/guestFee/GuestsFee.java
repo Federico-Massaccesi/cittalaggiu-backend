@@ -19,6 +19,7 @@ import java.util.List;
 @Table(name = "guests_fee")
 public class GuestsFee extends BaseEntity {
 
+    @JsonIgnore
     @ManyToOne
     @JoinColumn(name = "association_id", nullable = false) // Specifica la colonna association_id
     private Association association;

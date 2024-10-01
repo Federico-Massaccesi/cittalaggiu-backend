@@ -3,7 +3,9 @@ package it.cittalaggiu.gestioneprodotti.association;
 import it.cittalaggiu.gestioneprodotti.BaseEntity;
 import it.cittalaggiu.gestioneprodotti.UserEntity.UserEntity;
 import it.cittalaggiu.gestioneprodotti.guest.Guest;
+import it.cittalaggiu.gestioneprodotti.guestFee.GuestsFee;
 import it.cittalaggiu.gestioneprodotti.monthlyExpense.MonthlyExpense;
+import it.cittalaggiu.gestioneprodotti.monthlyIncome.MonthlyIncome;
 import it.cittalaggiu.gestioneprodotti.products.Product;
 import jakarta.persistence.*;
 import lombok.*;
@@ -40,6 +42,12 @@ public class Association extends BaseEntity {
     @OneToMany(mappedBy = "association", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Product> products;
 
-    @OneToMany(mappedBy = "association")
+    @OneToMany(mappedBy = "association", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<MonthlyExpense> monthlyExpenses = new ArrayList<>();
+
+    @OneToMany(mappedBy = "association", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<GuestsFee> guestsFees = new ArrayList<>();
+
+    @OneToMany(mappedBy = "association", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<MonthlyIncome> monthlyIncomes = new ArrayList<>();
 }

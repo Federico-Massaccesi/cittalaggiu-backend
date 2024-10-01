@@ -36,8 +36,10 @@ public class FinancialService {
     @Autowired
     private GuestService guestService;
 
-    @Scheduled(cron = "0 0 0 1 * ?") // Esegue il primo giorno di ogni mese
-    public void manageMonthlyFinances() {
+//    @Scheduled(cron = "0 0 0 1 * ?") // Esegue il primo giorno di ogni mese
+@Scheduled(cron = "0 * * * * ?")
+
+public void manageMonthlyFinances() {
         List<Association> associations = associationRepository.findAll();
 
         // 1. Calcola le GuestsFee e aggiorna l'incasso dell'associazione
