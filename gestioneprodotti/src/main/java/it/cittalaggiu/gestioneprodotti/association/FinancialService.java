@@ -36,8 +36,7 @@ public class FinancialService {
     @Autowired
     private GuestService guestService;
 
-//    @Scheduled(cron = "0 0 0 1 * ?") // Esegue il primo giorno di ogni mese
-@Scheduled(cron = "0 * * * * ?")
+   @Scheduled(cron = "0 0 0 1 * ?") // Esegue il primo giorno di ogni mese
 
 public void manageMonthlyFinances() {
         List<Association> associations = associationRepository.findAll();
