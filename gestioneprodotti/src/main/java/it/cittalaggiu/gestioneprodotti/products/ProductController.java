@@ -117,6 +117,7 @@ public class ProductController {
                 existingProduct.setName(product.name());
                 existingProduct.setPurchasePrice(product.purchasePrice());
                 existingProduct.setSalePrice(product.salePrice());
+                existingProduct.setQuantity(product.quantity());
             }
 
             Product updatedProduct = service.updateProduct(id, existingProduct);

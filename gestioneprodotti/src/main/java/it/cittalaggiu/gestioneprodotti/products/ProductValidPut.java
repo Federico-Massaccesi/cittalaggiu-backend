@@ -10,7 +10,8 @@ import java.util.List;
 public record ProductValidPut(
         String name,
         Double salePrice,
-        Double purchasePrice
+        Double purchasePrice,
+        Integer quantity
 
 ) {
 
