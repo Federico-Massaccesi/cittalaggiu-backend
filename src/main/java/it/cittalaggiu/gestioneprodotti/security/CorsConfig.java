@@ -13,6 +13,7 @@ public class CorsConfig {
     public CorsFilter corsFilter() {
         CorsConfiguration configuration = new CorsConfiguration();
         configuration.addAllowedOrigin("http://localhost:4200");
+        configuration.addAllowedOrigin("https://legendary-starburst-4f4539.netlify.app");
         configuration.addAllowedOrigin("http://interesting-sybila-federicoprod-a487c576.koyeb.app");
         configuration.addAllowedMethod("*");
         configuration.addAllowedHeader("*");
