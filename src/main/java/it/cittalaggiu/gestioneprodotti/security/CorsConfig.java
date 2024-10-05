@@ -14,7 +14,7 @@ public class CorsConfig {
         CorsConfiguration configuration = new CorsConfiguration();
         configuration.addAllowedOrigin("http://localhost:4200");
         configuration.addAllowedOrigin("https://legendary-starburst-4f4539.netlify.app");
-        configuration.addAllowedOrigin("https://extraordinary-zorine-federicoprod-2ea06d9a.koyeb.app/");
+        configuration.addAllowedOrigin("http://extraordinary-zorine-federicoprod-2ea06d9a.koyeb.app");
         configuration.addAllowedMethod("*");
         configuration.addAllowedHeader("*");
         configuration.setAllowCredentials(true);
