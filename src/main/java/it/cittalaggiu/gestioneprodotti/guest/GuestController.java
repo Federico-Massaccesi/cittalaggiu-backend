@@ -94,7 +94,7 @@ public class GuestController {
     public ResponseEntity<GuestDTO> updateGuestDebt(@PathVariable Long id, @RequestBody Map<String, Double> request) {
         double debt = request.get("debt");
         Guest guest = guestService.getGuestById(id).get();
-        guest.setDebt(debt);
+        guest.setDebt(guest.getDebt() + debt);
         guestService.createGuest(guest);
         return ResponseEntity.ok(convertToDTO(guest));
     }
